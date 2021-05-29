@@ -11,11 +11,14 @@ namespace RestWithASPNET5.Services.Implementations
 {
     public class PersonServiceImplementation : IPersonService
     {
-        private readonly IPersonRepository _repository;
+        private readonly IRepository<Person> _repository;
 
-        public PersonServiceImplementation(IPersonRepository repository)
+        private readonly IPersonRepository _personRepository;
+
+        public PersonServiceImplementation(IRepository<Person> repository, IPersonRepository personRepository)
         {
             _repository = repository;
+            _personRepository = personRepository;
         }
 
         public List<Person> FindAll()
@@ -41,6 +44,11 @@ namespace RestWithASPNET5.Services.Implementations
         public void Delete(long id)
         {
             _repository.Delete(id);
+        }
+
+        public Person FindByName(string name)
+        {
+            return _personRepository.FindByName(name);
         }
     }
 }

@@ -10,5 +10,6 @@ namespace RestWithASPNET5.Services
         Person FindById(long id);
         void Delete(long id);
         List<Person> FindAll();
+        Person FindByName(string name);
     }
 }

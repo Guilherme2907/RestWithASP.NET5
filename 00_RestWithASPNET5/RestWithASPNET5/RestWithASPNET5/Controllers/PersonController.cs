@@ -37,6 +37,14 @@ namespace RestWithASPNET5.Controllers
             return Ok(person);
         }
 
+        [HttpGet("name/{name}")]
+        public IActionResult GetByName(string name)
+        {
+            var person = _personService.FindByName(name);
+            if (person == null) return NotFound();
+            return Ok(person);
+        }
+
         [HttpPost]
         public IActionResult Post([FromBody] Person person)
         {

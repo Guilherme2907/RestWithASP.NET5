@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RestWithASPNET5.Models.Context;
 using RestWithASPNET5.Repository;
+using RestWithASPNET5.Repository.Generic;
 using RestWithASPNET5.Repository.Implementations;
 using RestWithASPNET5.Services;
 using RestWithASPNET5.Services.Implementations;
@@ -48,7 +49,8 @@ namespace RestWithASPNET5
 
             //Repositories
             services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
-            services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+            //services.AddScoped<IBookRepository, BookRepositoryImplementation>();
+            services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

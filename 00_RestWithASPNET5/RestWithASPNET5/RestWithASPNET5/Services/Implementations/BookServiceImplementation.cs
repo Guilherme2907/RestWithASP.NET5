@@ -6,9 +6,9 @@ namespace RestWithASPNET5.Services.Implementations
 {
     public class BookServiceImplementation : IBookService
     {
-        private readonly IBookRepository _repository;
+        private readonly IRepository<Book> _repository;
 
-        public BookServiceImplementation(IBookRepository repository)
+        public BookServiceImplementation(IRepository<Book> repository)
         {
             _repository = repository;
         }
