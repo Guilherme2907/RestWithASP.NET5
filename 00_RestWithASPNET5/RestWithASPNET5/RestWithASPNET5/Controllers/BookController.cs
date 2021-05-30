@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RestWithASPNET5.Data.VO;
 using RestWithASPNET5.Models;
 using RestWithASPNET5.Services;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RestWithASPNET5.Controllers
 {
@@ -38,17 +34,17 @@ namespace RestWithASPNET5.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Book Book)
+        public IActionResult Post([FromBody] BookVO book)
         {
-            if (Book == null) return BadRequest();
-            return Ok(_bookService.Create(Book));
+            if (book == null) return BadRequest();
+            return Ok(_bookService.Create(book));
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] Book Book)
+        public IActionResult Update([FromBody] BookVO book)
         {
-            if (Book == null) return BadRequest();
-            return Ok(_bookService.Update(Book));
+            if (book == null) return BadRequest();
+            return Ok(_bookService.Update(book));
         }
 
         [HttpDelete("{id}")]

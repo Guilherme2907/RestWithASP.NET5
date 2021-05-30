@@ -1,11 +1,8 @@
-﻿using RestWithASPNET5.Models;
-using RestWithASPNET5.Models.Context;
+﻿using RestWithASPNET5.Data.Converter.Implementations;
+using RestWithASPNET5.Data.VO;
+using RestWithASPNET5.Models;
 using RestWithASPNET5.Repository;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace RestWithASPNET5.Services.Implementations
 {
@@ -15,30 +12,35 @@ namespace RestWithASPNET5.Services.Implementations
 
         private readonly IPersonRepository _personRepository;
 
+        private readonly PersonConverter _converter;
+
         public PersonServiceImplementation(IRepository<Person> repository, IPersonRepository personRepository)
         {
             _repository = repository;
             _personRepository = personRepository;
+            _converter = new PersonConverter();
         }
 
-        public List<Person> FindAll()
+        public List<PersonVO> FindAll()
         {
-            return _repository.FindAll();
+            return _converter.Parse(_repository.FindAll());
         }
 
-        public Person FindById(long id)
+        public PersonVO FindById(long id)
         {
-            return _repository.FindById(id);
+            return _converter.Parse(_repository.FindById(id));
         }
 
-        public Person Create(Person person)
+        public PersonVO Create(PersonVO person)
         {
-            return _repository.Create(person);
+            var personEntity = _converter.Parse(person);
+            return _converter.Parse(_repository.Create(personEntity));
         }
 
-        public Person Update(Person person)
+        public PersonVO Update(PersonVO person)
         {
-            return _repository.Update(person);
+            var personEntity = _converter.Parse(person);
+            return _converter.Parse(_repository.Update(personEntity));
         }
 
         public void Delete(long id)
@@ -46,9 +48,9 @@ namespace RestWithASPNET5.Services.Implementations
             _repository.Delete(id);
         }
 
-        public Person FindByName(string name)
+        public PersonVO FindByName(string name)
         {
-            return _personRepository.FindByName(name);
+            return _converter.Parse(_personRepository.FindByName(name));
         }
     }
 }

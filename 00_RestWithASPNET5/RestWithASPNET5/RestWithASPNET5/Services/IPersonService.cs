@@ -1,15 +1,15 @@
-﻿using RestWithASPNET5.Models;
+﻿using RestWithASPNET5.Data.VO;
 using System.Collections.Generic;
 
 namespace RestWithASPNET5.Services
 {
     public interface IPersonService
     {
-        Person Create(Person person);
-        Person Update(Person person);
-        Person FindById(long id);
+        PersonVO Create(PersonVO person);
+        PersonVO Update(PersonVO person);
+        PersonVO FindById(long id);
         void Delete(long id);
-        List<Person> FindAll();
-        Person FindByName(string name);
+        List<PersonVO> FindAll();
+        PersonVO FindByName(string name);
     }
 }
