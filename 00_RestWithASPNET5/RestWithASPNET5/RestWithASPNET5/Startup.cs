@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using RestWithASPNET5.Hypermedia.Enricher;
 using RestWithASPNET5.Hypermedia.Filters;
 using RestWithASPNET5.Models.Context;
@@ -25,7 +27,7 @@ namespace RestWithASPNET5
 
         public IConfiguration Configuration { get; }
 
-        public Startup(IConfiguration configuration,IWebHostEnvironment environment)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
             Configuration = configuration;
             Environment = environment;
@@ -40,7 +42,7 @@ namespace RestWithASPNET5
 
             var connection = Configuration["MySQLConnection:MySQLConnectionString"];
 
-            services.AddDbContext<MySqlContext>(options => options.UseMySql(connection,ServerVersion.AutoDetect(connection)));
+            services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
             if (Environment.IsDevelopment()) MigrateDatabase(connection);
 
@@ -60,13 +62,28 @@ namespace RestWithASPNET5
 
             services.AddApiVersioning();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "REST API with .NET 5",
+                        Version = "v1",
+                        Description = "Api RestFul developed in course",
+                        Contact = new OpenApiContact
+                        {
+                            Name = "Guilherme Magalhães",
+                            Url = new Uri("https://github.com/Guilherme2907")
+                        }
+                    });
+            });
+
             //Services
             services.AddScoped<IPersonService, PersonServiceImplementation>();
             services.AddScoped<IBookService, BookServiceImplementation>();
 
             //Repositories
             services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
-            //services.AddScoped<IBookRepository, BookRepositoryImplementation>();
             services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
         }
 
@@ -81,6 +98,18 @@ namespace RestWithASPNET5
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json","REST API with .NET 5");
+            });
+
+
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+            app.UseRewriter(option);
 
             app.UseAuthorization();
 
