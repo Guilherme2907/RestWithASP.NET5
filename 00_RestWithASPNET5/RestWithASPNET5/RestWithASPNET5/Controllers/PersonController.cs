@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RestWithASPNET5.Data.VO;
+using RestWithASPNET5.Hypermedia.Filters;
 using RestWithASPNET5.Models;
 using RestWithASPNET5.Services;
 using System;
@@ -25,12 +26,14 @@ namespace RestWithASPNET5.Controllers
         }
 
         [HttpGet]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get()
         {
             return Ok(_personService.FindAll());
         }
 
         [HttpGet("{id}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Get(long id)
         {
             var person = _personService.FindById(id);
@@ -39,6 +42,7 @@ namespace RestWithASPNET5.Controllers
         }
 
         [HttpGet("name/{name}")]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult GetByName(string name)
         {
             var person = _personService.FindByName(name);
@@ -47,6 +51,7 @@ namespace RestWithASPNET5.Controllers
         }
 
         [HttpPost]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Post([FromBody] PersonVO person)
         {
             if (person == null) return BadRequest();
@@ -54,6 +59,7 @@ namespace RestWithASPNET5.Controllers
         }
 
         [HttpPut]
+        [TypeFilter(typeof(HyperMediaFilter))]
         public IActionResult Update([FromBody] PersonVO person)
         {
             if (person == null) return BadRequest();

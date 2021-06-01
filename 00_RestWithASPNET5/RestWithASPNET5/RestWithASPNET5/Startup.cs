@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using RestWithASPNET5.Hypermedia.Enricher;
+using RestWithASPNET5.Hypermedia.Filters;
 using RestWithASPNET5.Models.Context;
 using RestWithASPNET5.Repository;
 using RestWithASPNET5.Repository.Generic;
@@ -51,6 +53,11 @@ namespace RestWithASPNET5
             })
             .AddXmlSerializerFormatters();
 
+            var filterOptions = new HyperMediaFilterOptions();
+            filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+
+            services.AddSingleton(filterOptions);
+
             services.AddApiVersioning();
 
             //Services
@@ -80,6 +87,7 @@ namespace RestWithASPNET5
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
             });
         }
 
