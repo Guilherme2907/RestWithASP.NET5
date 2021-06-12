@@ -1,4 +1,5 @@
 ﻿using RestWithASPNET5.Data.VO;
+using RestWithASPNET5.Hypermedia.Utils;
 using System.Collections.Generic;
 
 namespace RestWithASPNET5.Services
@@ -10,6 +11,8 @@ namespace RestWithASPNET5.Services
         PersonVO FindById(long id);
         void Delete(long id);
         List<PersonVO> FindAll();
-        PersonVO FindByName(string name);
+        List<PersonVO> FindByName(string firstName,string lastName);
+        PersonVO Disable(long id);
+        PagedSearchVO<PersonVO> FindWithPagedSearch(string name,string sortDirection,int pageSize,int page);
     }
 }

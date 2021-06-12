@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RestWithASPNET5.Data.VO;
 using RestWithASPNET5.Hypermedia.Filters;
@@ -10,6 +11,7 @@ namespace RestWithASPNET5.Controllers
 {
     [ApiVersion("1")]
     [ApiController]
+    [Authorize("Bearer")]
     [Route("api/[controller]/v{version:apiVersion}")]
     public class PersonController : ControllerBase
     {
@@ -32,6 +34,17 @@ namespace RestWithASPNET5.Controllers
             return Ok(_personService.FindAll());
         }
 
+        [HttpGet("{sortDirection}/{pageSize}/{page}")]
+        [ProducesResponseType((200), Type = typeof(List<PersonVO>))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public IActionResult Get([FromQuery] string name,string sortDirection,int pageSize,int page)
+        {
+            return Ok(_personService.FindWithPagedSearch(name,sortDirection,pageSize,page));
+        }
+
         [HttpGet("{id}")]
         [ProducesResponseType((200), Type = typeof(PersonVO))]
         [ProducesResponseType(204)]
@@ -45,17 +58,17 @@ namespace RestWithASPNET5.Controllers
             return Ok(person);
         }
 
-        [HttpGet("name/{name}")]
+        [HttpGet("findPersonByName")]
         [ProducesResponseType((201), Type = typeof(PersonVO))]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]
         [TypeFilter(typeof(HyperMediaFilter))]
-        public IActionResult GetByName(string name)
+        public IActionResult GetByName([FromQuery] string firstName,string lastName)
         {
-            var person = _personService.FindByName(name);
-            if (person == null) return NotFound();
-            return Ok(person);
+            var persons = _personService.FindByName(firstName,lastName);
+            if (persons == null) return NotFound();
+            return Ok(persons);
         }
 
         [HttpPost]
@@ -88,6 +101,18 @@ namespace RestWithASPNET5.Controllers
         {
             _personService.Delete(id);
             return NoContent();
+        }
+
+        [HttpPatch("{id}")]
+        [ProducesResponseType((200), Type = typeof(PersonVO))]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [TypeFilter(typeof(HyperMediaFilter))]
+        public IActionResult Patch(long id)
+        {
+            var person = _personService.Disable(id);
+            return Ok(person);
         }
 
         //private decimal ConvertToDecimal(string strNumber)
