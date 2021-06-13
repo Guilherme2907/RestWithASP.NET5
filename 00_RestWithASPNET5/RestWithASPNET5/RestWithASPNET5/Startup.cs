@@ -2,10 +2,12 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -111,6 +113,8 @@ namespace RestWithASPNET5
 
             services.AddApiVersioning();
 
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             //Configuração do swagger
             services.AddSwaggerGen(c =>
             {
@@ -133,6 +137,7 @@ namespace RestWithASPNET5
             services.AddScoped<IPersonService, PersonServiceImplementation>();
             services.AddScoped<IBookService, BookServiceImplementation>();
             services.AddScoped<ILoginService, LoginServiceImplementation>();
+            services.AddScoped<IFileService, FileServiceImplementation>();
 
             //Transient => Cria uma nova instância sempre que é injetado
             services.AddTransient<ITokenService, TokenServiceImplementation>();
