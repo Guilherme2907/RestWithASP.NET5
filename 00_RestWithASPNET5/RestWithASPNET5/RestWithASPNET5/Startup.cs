@@ -94,7 +94,7 @@ namespace RestWithASPNET5
 
             services.AddDbContext<MySqlContext>(options => options.UseMySql(connection, ServerVersion.AutoDetect(connection)));
 
-            if (Environment.IsDevelopment()) MigrateDatabase(connection);
+            //if (Environment.IsDevelopment()) MigrateDatabase(connection);
 
             //Permite a api consumir xml e json
             services.AddMvc(options =>

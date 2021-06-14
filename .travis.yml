@@ -1,0 +1,6 @@
+sudo: required
+dist: bionic
+language: csharp
+mono: none
+dotner:5.0
+services: docker
