@@ -4,3 +4,22 @@ language: csharp
 mono: none
 dotner:5.0
 services: docker
+before_install:
+  - cd 00_RestWithASPNET5
+  - echo "We are in the right folder"
+script:
+  - docker-compose build
+before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+deploy:
+  provider: script
+  script:
+    docker tag rest_with_asp_net:latest guilherme2907/rest_with_asp_net:$TRAVIS_JOB_ID;
+    docker tag rest-with-asp-net-5:latest guilherme2907/rest-with-asp-net-5:$TRAVIS_JOB_ID;
+    docker push guilherme2907/rest-with-asp-net-5:$TRAVIS_JOB_ID;
+    docker push guilherme2907/rest_with_asp_net:$TRAVIS_JOB_ID;
+  on:
+    branch: main
+notifications:
+  email: false
+    
